@@ -43,23 +43,11 @@ def make_dataset(pnames, df):
     return by_prov
 
 #to make barchart dataset, must retrieve data from most recent date only
-def make_barchart_dataset(pnames, df):
-    df_sub = df[df['prname'].isin(provnames)]
-    recent = max(df_sub['YMD'])
-    recent_date = df_sub[df_sub['YMD'] == recent]
+def make_barchart_dataset(df):
+    recent = max(df['YMD'])
+    recent_date = df[df['YMD'] == recent]
 
     return recent_date
-
-#must pivot datasets for linear plot data so prov names are columns
-def format_dataset(df, value):
-    df_pivot = pd.pivot_table(df,
-    columns = 'prname',
-    index = 'YMD',
-    values = value)
-    
-    df_pivot = df_pivot.rename_axis(None)
-
-    return df_pivot
 
 #for all data
 #make_dataset(unique_provnames(), format_dates(df))
@@ -67,10 +55,11 @@ def format_dataset(df, value):
 #Total Cases Figure
 def return_total_cases_fig():
     graph = []
-    data = format_dataset(make_dataset(unique_provnames(), format_dates(df)), 'numtotal')
+    data = make_dataset(unique_provnames(), format_dates(df))
+    data = data[['prname', 'YMD', 'numtotal']]
     for region in unique_provnames():
-        x_val = data.prname.tolist()
-        y_val = data.region.tolist()
+        x_val = data[data['prname'] == region].YMD.tolist()
+        y_val = data[data['prname'] == region].numtotal.tolist()
     graph.append(
         go.Scatter(
             x = x_val,
@@ -89,3 +78,10 @@ def return_total_cases_fig():
     figures.append(dict(data = graph, layout = layout))
 
     return figures
+
+#New Cases Figure
+def return_new_cases_fig():
+    graph = []
+    data = make_barchart_dataset(make_dataset(unique_provnames(), format_dates(df)))
+    data = data[['prname', 'YMD', 'numtoday', 'percenttoday', 'numtotal_last7', 'ratetotal_last7']]
+    
