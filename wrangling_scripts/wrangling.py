@@ -1,5 +1,6 @@
 import pandas as pd
 pd.options.mode.chained_assignment = None
+import plotly.graph_objs as go
 
 csv_url = "https://health-infobase.canada.ca/src/data/covidLive/covid19.csv"
 
@@ -61,4 +62,30 @@ def format_dataset(df, value):
     return df_pivot
 
 #for all data
-data = make_dataset(unique_provnames(), format_dates(df))
+#make_dataset(unique_provnames(), format_dates(df))
+
+#Total Cases Figure
+def return_total_cases_fig():
+    graph = []
+    data = format_dataset(make_dataset(unique_provnames(), format_dates(df)), 'numtotal')
+    for region in unique_provnames():
+        x_val = data.prname.tolist()
+        y_val = data.region.tolist()
+    graph.append(
+        go.Scatter(
+            x = x_val,
+            y = y_val,
+            mode = 'lines',
+            name = region
+        )
+    )
+
+    layout = dict(title = "Cumulative COVID-19 Cases by Region",
+                    xaxis = dict(title = 'Date'),
+                    yaxis = dict(title = 'Number of Cases'),
+                )
+    
+    figures = []
+    figures.append(dict(data = graph, layout = layout))
+
+    return figures
