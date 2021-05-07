@@ -60,14 +60,14 @@ def return_total_cases_fig():
     for region in unique_provnames():
         x_val = data[data['prname'] == region].YMD.tolist()
         y_val = data[data['prname'] == region].numtotal.tolist()
-    graph.append(
-        go.Scatter(
-            x = x_val,
-            y = y_val,
-            mode = 'lines',
-            name = region
+        graph.append(
+            go.Scatter(
+                x = x_val,
+                y = y_val,
+                mode = 'lines',
+                name = region
+            )
         )
-    )
 
     layout = dict(title = "Cumulative COVID-19 Cases by Region",
                     xaxis = dict(title = 'Date'),
@@ -166,14 +166,14 @@ def return_active_cases_fig():
     for region in unique_provnames():
         x_val = data[data['prname'] == region].YMD.tolist()
         y_val = data[data['prname'] == region].numactive.tolist()
-    graph.append(
-        go.Scatter(
-            x = x_val,
-            y = y_val,
-            mode = 'lines',
-            name = region
+        graph.append(
+            go.Scatter(
+                x = x_val,
+                y = y_val,
+                mode = 'lines',
+                name = region
+            )
         )
-    )
 
     layout_two = dict(title = 'Cases Active Historically By Region',
                         xaxis = dict(title = 'Date'),
@@ -210,14 +210,14 @@ def return_recoveries_fig():
     for region in unique_provnames():
         x_val = data[data['prname'] == region].YMD.tolist()
         y_val = data[data['prname'] == region].numrecover.tolist()
-    graph_two.append(
-        go.Scatter(
-            x = x_val,
-            y = y_val,
-            mode = 'lines',
-            name = region
+        graph_two.append(
+            go.Scatter(
+                x = x_val,
+                y = y_val,
+                mode = 'lines',
+                name = region
+            )
         )
-    )
 
     layout_two = dict(title = "Cumulative Recoveries by Region",
                     xaxis = dict(title = 'Date'),
@@ -253,14 +253,14 @@ def return_deaths_fig():
     for region in unique_provnames():
         x_val = data[data['prname'] == region].YMD.tolist()
         y_val = data[data['prname'] == region].numdeaths.tolist()
-    graph_two.append(
-        go.Scatter(
-            x = x_val,
-            y = y_val,
-            mode = 'lines',
-            name = region
+        graph_two.append(
+            go.Scatter(
+                x = x_val,
+                y = y_val,
+                mode = 'lines',
+                name = region
+            )
         )
-    )
 
     layout_two = dict(title = "Cumulative Deaths by Region",
                     xaxis = dict(title = 'Date'),
@@ -323,14 +323,14 @@ def return_rate_of_infection_fig():
     for region in unique_provnames():
         x_val = data[data['prname'] == region].YMD.tolist()
         y_val = data[data['prname'] == region].ratetotal.tolist()
-    graph.append(
-        go.Scatter(
-            x = x_val,
-            y = y_val,
-            mode = 'lines',
-            name = region
+        graph.append(
+            go.Scatter(
+                x = x_val,
+                y = y_val,
+                mode = 'lines',
+                name = region
+            )
         )
-    )
 
     layout = dict(title = "Rate of Infection (per 100,000 population) By Region",
                     xaxis = dict(title = 'Date'),
@@ -350,14 +350,14 @@ def return_testing_rate_fig():
     for region in unique_provnames():
         x_val = data[data['prname'] == region].YMD.tolist()
         y_val = data[data['prname'] == region].ratetested.tolist()
-    graph.append(
-        go.Scatter(
-            x = x_val,
-            y = y_val,
-            mode = 'lines',
-            name = region
+        graph.append(
+            go.Scatter(
+                x = x_val,
+                y = y_val,
+                mode = 'lines',
+                name = region
+            )
         )
-    )
 
     layout = dict(title = "Testing Rate (per 1 million population) By Region",
                     xaxis = dict(title = 'Date'),

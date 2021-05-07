@@ -1,14 +1,26 @@
 from COVID_dashboard_app import app
-
+import json, plotly
 from flask import render_template
 import pandas as pd
 from wrangling_scripts.wrangling import *
+from wrangling_scripts.vaccine_wrangling import *
 
 @app.route('/')
 @app.route('/index')
 def index():
-    return render_template('index.html')
-    
+
+    figures = return_vaccine_fig()
+
+    # plot ids for the html id tag
+    ids = ['figure-{}'.format(i) for i, _ in enumerate(figures)]
+
+    # Convert the plotly figures to JSON for javascript in html template
+    figuresJSON = json.dumps(figures, cls=plotly.utils.PlotlyJSONEncoder)
+
+    return render_template('index.html',
+                           ids=ids,
+                           figuresJSON=figuresJSON)
+   
 @app.route('/total_cases')
 def total_cases():
 
