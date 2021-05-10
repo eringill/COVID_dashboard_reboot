@@ -82,7 +82,7 @@ def return_total_cases_fig():
 #New Cases Figures
 def return_new_cases_fig():
     data = make_barchart_dataset(make_dataset(unique_provnames(), format_dates(df)))
-    data = data[['prname', 'YMD', 'numtoday', 'percenttoday', 'numtotal_last7', 'ratetotal_last7']]
+    data = data[['prname', 'YMD', 'numtoday', 'percentoday', 'numtotal_last7', 'ratetotal_last7']]
 
     graph_one = []
     graph_one.append(
@@ -101,7 +101,7 @@ def return_new_cases_fig():
     graph_two.append(
         go.Bar(
             x = data.prname.tolist(),
-            y = data.percenttoday.tolist(),
+            y = data.percentoday.tolist(),
         )
     )
     
@@ -153,7 +153,7 @@ def return_active_cases_fig():
     graph_one.append(
         go.Pie(
             labels = data_pie.prname.tolist(),
-            values = data_pie.numtoday.tolist(),
+            values = data_pie.numactive.tolist(),
         )
     )
 
