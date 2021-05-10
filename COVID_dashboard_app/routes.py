@@ -3,7 +3,7 @@ import json, plotly
 from flask import render_template
 import pandas as pd
 from wrangling_scripts.wrangling import *
-from wrangling_scripts.vaccine_wrangling import *
+from wrangling_scripts.vaccine_wrangling import return_vaccine_fig
 
 @app.route('/')
 @app.route('/index')

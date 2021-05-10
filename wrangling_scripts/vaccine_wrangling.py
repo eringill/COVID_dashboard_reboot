@@ -1,5 +1,5 @@
 import pandas as pd
-pd.options.mode.chained_assignment = None
+#pd.options.mode.chained_assignment = None
 import plotly.graph_objs as go
 
 csv_url = "https://health-infobase.canada.ca/src/data/covidLive/vaccination-coverage-map.csv"

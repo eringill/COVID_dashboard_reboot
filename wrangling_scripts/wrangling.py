@@ -166,7 +166,7 @@ def return_active_cases_fig():
     for region in unique_provnames():
         x_val = data[data['prname'] == region].YMD.tolist()
         y_val = data[data['prname'] == region].numactive.tolist()
-        graph.append(
+        graph_two.append(
             go.Scatter(
                 x = x_val,
                 y = y_val,
