@@ -66,7 +66,7 @@ def return_vaccine_fig():
             )
         )
 
-    layout = dict(title = "Proportion of Individuals in Canada Who Have Received Vaccines",
+    layout = dict(title = "Proportion of Individuals in Canada <br> Who Have Received Vaccines",
                     xaxis = dict(title = 'Date'),
                     yaxis = dict(title = 'Proportion'),
                 )

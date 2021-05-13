@@ -58,6 +58,7 @@
     <!-- middle section -->
   
     <!--charts-->       
+    
     <div id="charts" class="container mt-3 text-center">
                     
         <!--top two charts-->       
@@ -88,4 +89,19 @@
         </div>
     </div>
   </body>
+  <footer>
+
+    <script type="text/javascript">
+        // plots the figure with id
+        // id much match the div id above in the html
+        var figures = {{figuresJSON | safe}};
+        var ids = {{ids | safe}};
+        for(var i in figures) {
+            Plotly.plot(ids[i],
+                figures[i].data,
+                figures[i].layout || {});
+        }
+    </script>
+
+  </footer>
   </html>

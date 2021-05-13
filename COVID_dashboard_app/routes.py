@@ -1,5 +1,7 @@
 from COVID_dashboard_app import app
-import json, plotly
+import json
+import pprint as pp
+import plotly
 from flask import render_template
 import pandas as pd
 from wrangling_scripts.wrangling import *
@@ -11,11 +13,13 @@ def index():
 
     figures = return_vaccine_fig()
 
+
     # plot ids for the html id tag
     ids = ['figure-{}'.format(i) for i, _ in enumerate(figures)]
 
     # Convert the plotly figures to JSON for javascript in html template
     figuresJSON = json.dumps(figures, cls=plotly.utils.PlotlyJSONEncoder)
+    pp.pprint(figuresJSON)
 
     return render_template('index.html',
                            ids=ids,
