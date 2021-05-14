@@ -1,0 +1,3 @@
+web gunicorn COVID_dashboard:app
+
+
