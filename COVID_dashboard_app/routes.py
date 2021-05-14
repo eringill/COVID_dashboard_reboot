@@ -1,6 +1,5 @@
 from COVID_dashboard_app import app
 import json
-import pprint as pp
 import plotly
 from flask import render_template
 import pandas as pd
@@ -19,7 +18,6 @@ def index():
 
     # Convert the plotly figures to JSON for javascript in html template
     figuresJSON = json.dumps(figures, cls=plotly.utils.PlotlyJSONEncoder)
-    pp.pprint(figuresJSON)
 
     return render_template('index.html',
                            ids=ids,

@@ -69,11 +69,19 @@ def return_total_cases_fig():
             )
         )
 
-    layout = dict(title = "Cumulative COVID-19 Cases by Region",
-                    xaxis = dict(title = 'Date'),
-                    yaxis = dict(title = 'Number of Cases'),
-                )
-    
+    layout = dict(title="Cumulative COVID-19 Cases by Region",
+                  xaxis=dict(title='Date'),
+                  yaxis=dict(title='Cumulative Cases by Region'),
+                  updatemenus=[dict(buttons=list([
+                      dict(label="Linear",
+                           method="relayout",
+                           args=[{"yaxis.type": "linear"}]),
+
+                      dict(label="Log",
+                           method="relayout",
+                           args=[{"yaxis.type": "log"}]),
+                  ]),
+                  )])
     figures = []
     figures.append(dict(data = graph, layout = layout))
 
@@ -93,7 +101,7 @@ def return_new_cases_fig():
     )
 
     layout_one = dict(title = 'New Cases Today By Region',
-                        xaxis = dict(title = 'Region'),
+                        xaxis = dict(title = 'Region', title_standoff = 25, automargin = True),
                         yaxis = dict(title = 'New Cases Today'),
                     )
 
@@ -106,7 +114,7 @@ def return_new_cases_fig():
     )
     
     layout_two = dict(title = 'Percent New Cases Today By Region',
-                        xaxis = dict(title = 'Region'),
+                        xaxis = dict(title = 'Region', title_standoff = 25, automargin = True),
                         yaxis = dict(title = 'Percent New Cases Today'),
                     )
 
@@ -119,7 +127,7 @@ def return_new_cases_fig():
     )
 
     layout_three = dict(title = 'New Cases in Last 7 Days By Region',
-                            xaxis = dict(title = 'Region'),
+                            xaxis = dict(title = 'Region', title_standoff = 25, automargin = True),
                             yaxis = dict(title = 'New Cases in Last 7 Days'),
                         )
 
@@ -131,8 +139,8 @@ def return_new_cases_fig():
         )
     )
 
-    layout_four = dict(title = 'New Case Rate in Last 7 Days By Region',
-                            xaxis = dict(title = 'Region'),
+    layout_four = dict(title = 'New Case Rate (per 100,000 population) <br> in Last 7 Days By Region',
+                            xaxis = dict(title = 'Region', title_standoff = 25, automargin = True),
                             yaxis = dict(title = 'New Case Rate in Last 7 Days'),
                             )
 
@@ -148,6 +156,7 @@ def return_new_cases_fig():
 def return_active_cases_fig():
     data_pie = make_barchart_dataset(make_dataset(unique_provnames(), format_dates(df)))
     data_pie = data_pie[['prname', 'YMD', 'numactive']]
+    data_pie = data_pie[data_pie['prname'] != 'Canada']
 
     graph_one = []
     graph_one.append(
@@ -157,7 +166,8 @@ def return_active_cases_fig():
         )
     )
 
-    layout_one = dict(title = 'Active Cases Today By Region',
+    layout_one = dict(title = 'Active Cases Today By Region <br> as a Percentage of All Active Cases in Canada', textposition = 'inside', uniformtext_minsize=12,
+                      uniformtext_mode='hide'
                     )
 
     graph_two = []
@@ -180,8 +190,25 @@ def return_active_cases_fig():
                         yaxis = dict(title = 'Active Cases'),
                     )
 
+    data = make_barchart_dataset(make_dataset(unique_provnames(), format_dates(df)))
+    data = data[['prname', 'YMD', 'rateactive']]
+
+    graph_three = []
+    graph_three.append(
+        go.Bar(
+            x=data.prname.tolist(),
+            y=data.rateactive.tolist(),
+        )
+    )
+
+    layout_three = dict(title='Active Case Rate (Per 100,000 Population) <br> Today By Region',
+                      xaxis=dict(title='Region', title_standoff=25, automargin=True),
+                      yaxis=dict(title='Active Case Rate'),
+                      )
+
     figures = []
     figures.append(dict(data = graph_one, layout = layout_one))
+    figures.append(dict(data=graph_three, layout=layout_three))
     figures.append(dict(data = graph_two, layout = layout_two))
     
     return figures
@@ -200,7 +227,7 @@ def return_recoveries_fig():
     )
 
     layout_one = dict(title = 'Number of Recoveries Today By Region',
-                        xaxis = dict(title = 'Region'),
+                        xaxis = dict(title = 'Region', title_standoff = 25, automargin = True),
                         yaxis = dict(title = 'Number of Recoveries Today'),
                     )
     
@@ -222,7 +249,16 @@ def return_recoveries_fig():
     layout_two = dict(title = "Cumulative Recoveries by Region",
                     xaxis = dict(title = 'Date'),
                     yaxis = dict(title = 'Total Number of Recoveries'),
-                )
+                      updatemenus=[dict(buttons=list([
+                          dict(label="Linear",
+                               method="relayout",
+                               args=[{"yaxis.type": "linear"}]),
+
+                          dict(label="Log",
+                               method="relayout",
+                               args=[{"yaxis.type": "log"}]),
+                      ]),
+                      )])
     
     figures = []
     figures.append(dict(data = graph_one, layout = layout_one))
@@ -230,6 +266,7 @@ def return_recoveries_fig():
     
     return figures
 
+#deaths figures
 def return_deaths_fig():
     data_bar = make_barchart_dataset(make_dataset(unique_provnames(), format_dates(df)))
     data_bar = data_bar[['prname', 'YMD', 'numdeathstoday', 'numdeaths_last7', 'ratedeaths_last7', 'avgdeaths_last7']]
@@ -238,13 +275,13 @@ def return_deaths_fig():
     graph_one.append(
         go.Bar(
             x = data_bar.prname.tolist(),
-            y = data_bar.numdeathstoday.tolist(),
+            y = data_bar.numdeathstoday.tolist()
         )
     )
 
     layout_one = dict(title = 'Number of Deaths Today By Region',
-                        xaxis = dict(title = 'Region'),
-                        yaxis = dict(title = 'Number of Deaths Today'),
+                        xaxis = dict(title = 'Region', title_standoff = 25, automargin = True),
+                        yaxis = dict(title = 'Number of Deaths Today')
                     )
     
     graph_two = []
@@ -276,7 +313,7 @@ def return_deaths_fig():
     )
 
     layout_three = dict(title = 'Number of Deaths in Last 7 Days By Region',
-                        xaxis = dict(title = 'Region'),
+                        xaxis = dict(title = 'Region', title_standoff = 25, automargin = True),
                         yaxis = dict(title = 'Number of Deaths in Last 7 Days'),
                     )
 
@@ -288,30 +325,17 @@ def return_deaths_fig():
         )
     )
 
-    layout_four = dict(title = 'Mortality Rate in Last 7 Days By Region',
-                        xaxis = dict(title = 'Region'),
+    layout_four = dict(title = 'Mortality Rate (per 100,000 population) <br> in Last 7 Days By Region',
+                        xaxis = dict(title = 'Region', title_standoff = 25, automargin = True),
                         yaxis = dict(title = 'Mortality Rate in Last 7 Days'),
                     )
 
-    graph_five = []
-    graph_five.append(
-        go.Bar(
-            x = data_bar.prname.tolist(),
-            y = data_bar.avgdeaths_last7.tolist(),
-        )
-    )
-
-    layout_five = dict(title = 'Average Number of Deaths in Last 7 Days By Region',
-                        xaxis = dict(title = 'Region'),
-                        yaxis = dict(title = 'Average Number of Deaths in Last 7 Days'),
-                    )
 
     figures = []
     figures.append(dict(data = graph_one, layout = layout_one))
     figures.append(dict(data = graph_two, layout = layout_two))
     figures.append(dict(data = graph_three, layout = layout_three))
     figures.append(dict(data = graph_four, layout = layout_four))
-    figures.append(dict(data = graph_five, layout = layout_five))
 
     return figures
 
@@ -335,7 +359,16 @@ def return_rate_of_infection_fig():
     layout = dict(title = "Rate of Infection (per 100,000 population) By Region",
                     xaxis = dict(title = 'Date'),
                     yaxis = dict(title = 'Rate of Infection (per 100,000 population)'),
-                )
+                    updatemenus=[dict(buttons=list([
+                      dict(label="Linear",
+                           method="relayout",
+                           args=[{"yaxis.type": "linear"}]),
+
+                      dict(label="Log",
+                           method="relayout",
+                           args=[{"yaxis.type": "log"}]),
+                  ]),
+                  )])
     
     figures = []
     figures.append(dict(data = graph, layout = layout))
@@ -346,10 +379,10 @@ def return_rate_of_infection_fig():
 def return_testing_rate_fig():
     graph = []
     data = make_dataset(unique_provnames(), format_dates(df))
-    data = data[['prname', 'YMD', 'ratetested']]
+    data = data[['prname', 'YMD', 'ratetests']]
     for region in unique_provnames():
         x_val = data[data['prname'] == region].YMD.tolist()
-        y_val = data[data['prname'] == region].ratetested.tolist()
+        y_val = data[data['prname'] == region].ratetests.tolist()
         graph.append(
             go.Scatter(
                 x = x_val,
@@ -362,7 +395,16 @@ def return_testing_rate_fig():
     layout = dict(title = "Testing Rate (per 1 million population) By Region",
                     xaxis = dict(title = 'Date'),
                     yaxis = dict(title = 'Testing Rate (per 1 million population)'),
-                )
+                    updatemenus=[dict(buttons=list([
+                      dict(label="Linear",
+                           method="relayout",
+                           args=[{"yaxis.type": "linear"}]),
+
+                      dict(label="Log",
+                           method="relayout",
+                           args=[{"yaxis.type": "log"}]),
+                  ]),
+                  )])
     
     figures = []
     figures.append(dict(data = graph, layout = layout))
