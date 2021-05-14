@@ -1,4 +1,4 @@
-from COVID_dashboard_app import app
+from canadacoviddashboard import app
 import json
 import plotly
 from flask import render_template

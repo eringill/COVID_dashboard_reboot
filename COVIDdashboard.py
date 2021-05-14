@@ -1,2 +1,2 @@
-from COVID_dashboard_app import app
-
+from canadacoviddashboard import app
+#app.run(host='0.0.0.0', port=3001, debug=True)
