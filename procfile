@@ -1,2 +1,1 @@
-web gunicorn coviddashboard:app
-
+web: gunicorn coviddashboard:app
