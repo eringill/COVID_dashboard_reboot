@@ -15,24 +15,27 @@ The motivation for the original dashboard was to create something that users cou
 
 Required Libraries
 ------------------
-(Technically nothing - you can view the dashboard [here]())
+(Technically nothing - you can view the dashboard at https://canadacoviddashboard.herokuapp.com/)
 
 If you want to fork the repo and run on your own machine, you'll need:
 - python
 - pandas
 - plotly
 - flask
+- more deailed requirements can be found in `requirements.txt`
 
 Files
 -----
 - `README.md` - This file
 - `LICENSE.md` - Legal information
+- `requirements.txt` - requrements to run the dashboard
+- `Procfile` - identify the type of app this is
 - `wrangling_scripts/wrangling.py` - scripts to wrangle data on COVID-19 infections
 - `wrangling_scripts/vaccine_wrangling.py` - scripts to wrangle data on COVID-19 vaccination
-- `COVIDdashboard.py` - execute to start the app
-- `COVID_dashboard_app/static` - all image files
-- `COVID_dashboard_app/templates` - all html files
-- `COVID_dashboard_app/__init__.py` - flask config and routes import
-- `COVID_dashboard_app/routes.py` - all the information for flask to do its job and JavaScript to pass figures to front end
+- `coviddashboard.py` - execute to start the app
+- `canadacoviddashboard/static` - all image files
+- `canadacoviddashboard/templates` - all html files
+- `canadacoviddashboard/__init__.py` - flask config and routes import
+- `canadacoviddashboard/routes.py` - all the information for flask to do its job and JavaScript to pass figures to front end
 
 
