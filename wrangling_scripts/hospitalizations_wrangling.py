@@ -2,7 +2,6 @@ import requests
 import pandas as pd
 import json
 import plotly.graph_objs as go
-import plotly.io as pio
 pio.renderers.default='notebook'
 import datetime as dt
 
