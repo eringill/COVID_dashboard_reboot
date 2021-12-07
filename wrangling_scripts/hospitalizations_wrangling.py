@@ -1,7 +1,6 @@
 import requests
 import pandas as pd
 import json
-import chart_studio.plotly as py
 import plotly.graph_objects as go
 import plotly.io as pio
 pio.renderers.default='notebook'
