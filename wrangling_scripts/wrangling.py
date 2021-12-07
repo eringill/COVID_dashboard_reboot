@@ -326,6 +326,7 @@ def return_active_cases_fig():
 def active_figs():
     figs = return_active_cases_fig()
     figs.append(return_hosp_fig())
+    return figs
 
 #Recoveries Figures
 def return_recoveries_fig():
