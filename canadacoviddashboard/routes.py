@@ -27,7 +27,7 @@ def index():
 @app.route('/total_cases')
 def total_cases():
 
-    figures = return_total_cases_fig(), return_hosp_fig()
+    figures = [return_total_cases_fig(), return_hosp_fig()]
 
     # plot ids for the html id tag
     ids = ['figure-{}'.format(i) for i, _ in enumerate(figures)]
