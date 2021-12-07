@@ -5,6 +5,7 @@ from flask import render_template
 import pandas as pd
 from wrangling_scripts.wrangling import *
 from wrangling_scripts.vaccine_wrangling import return_vaccine_fig
+from wrangling_scripts.hospitalizations_wrangling import return_hosp_fig
 
 @app.route('/')
 @app.route('/index')
@@ -26,7 +27,7 @@ def index():
 @app.route('/total_cases')
 def total_cases():
 
-    figures = return_total_cases_fig()
+    figures = return_total_cases_fig(), return_hosp_fig()
 
     # plot ids for the html id tag
     ids = ['figure-{}'.format(i) for i, _ in enumerate(figures)]
