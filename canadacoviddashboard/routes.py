@@ -5,6 +5,7 @@ from flask import render_template
 import pandas as pd
 from wrangling_scripts.wrangling import *
 from wrangling_scripts.vaccine_wrangling import return_vaccine_fig
+from wrangling_scripts.variant_wrangling import return_variant_graph
 
 @app.route('/')
 @app.route('/index')
@@ -119,5 +120,19 @@ def testing_rate():
     figuresJSON = json.dumps(figures, cls=plotly.utils.PlotlyJSONEncoder)
 
     return render_template('testing_rate.html',
+                           ids=ids,
+                           figuresJSON=figuresJSON)
+
+@app.route('/variants')
+def variants():
+    figures = return_variant_graph()
+
+    # plot ids for the html id tag
+    ids = ['figure-{}'.format(i) for i, _ in enumerate(figures)]
+
+    # Convert the plotly figures to JSON for javascript in html template
+    figuresJSON = json.dumps(figures, cls=plotly.utils.PlotlyJSONEncoder)
+
+    return render_template('variants.html',
                            ids=ids,
                            figuresJSON=figuresJSON)

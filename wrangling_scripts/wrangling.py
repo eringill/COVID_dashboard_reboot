@@ -221,7 +221,7 @@ pr_data['date'] = pd.to_datetime(pr_data['date'])
 pr_data['YMD'] = pr_data['date'].dt.date
 pr_data['prname'] = pr_data['prname'].replace(prov_dict)
 provnames = sorted(pr_data.prname.unique())
-myorder = [2, 0, 1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+myorder = [2, 0, 1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
 provnames = [provnames[i] for i in myorder]
 
 
