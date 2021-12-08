@@ -36,8 +36,8 @@ def return_variant_graph():
         graph.append(
             go.Bar(
                 x = x_val,
-                y = y_val
-                
+                y = y_val, 
+                name = var
             )
         )
 
