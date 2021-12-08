@@ -3,7 +3,6 @@ pd.options.mode.chained_assignment = None
 import plotly.graph_objs as go
 import requests
 import pandas as pd
-import json
 import datetime as dt
 
 csv_url = "https://health-infobase.canada.ca/src/data/covidLive/covid19.csv"
