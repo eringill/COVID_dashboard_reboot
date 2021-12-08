@@ -166,10 +166,7 @@ def access_api(prov_list, url, column):
         new_url = url + prov
         r = requests.get(new_url, allow_redirects=True)
 
-        open('data_summary.json', 'wb').write(r.content)
-
-        with open('data_summary.json') as json_file:
-            data = json.load(json_file)
+        data = r.json()
 
         hosp = data['data']
         
@@ -188,10 +185,7 @@ def access_canada_api(url, column):
     total_data = pd.DataFrame(columns = column_names) 
     r = requests.get(url, allow_redirects=True)
 
-    open('data_summary.json', 'wb').write(r.content)
-
-    with open('data_summary.json') as json_file:
-        data = json.load(json_file)
+    data = r.json()
 
     hosp = data['data']
         
@@ -204,6 +198,8 @@ def access_canada_api(url, column):
     total_data = total_data.append(df)
 
     return total_data
+
+
 
 prov_abbs = ['AB', 'BC', 'MB', 'NB', 'NL', 'NS', 'QC', 'ON', 'SK', 'PE', 'NT', 'NU', 'YT']
 
@@ -222,12 +218,12 @@ prov_dict = {
 
 pr_data = pr_data.append(can_data)
 pr_data['date'] = pd.to_datetime(pr_data['date'])
-provnames = sorted(pr_data.prname.unique())
-myorder = [2, 0, 1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-provnames = [provnames[i] for i in myorder]
 
 pr_data['YMD'] = pr_data['date'].dt.date
 pr_data['prname'] = pr_data['prname'].replace(prov_dict)
+provnames = sorted(pr_data.prname.unique())
+myorder = [2, 0, 1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+provnames = [provnames[i] for i in myorder]
 
 
 #hospitalizations figure
@@ -258,8 +254,7 @@ def return_hosp_fig():
                            args=[{"yaxis.type": "log"}]),
                   ]),
                   )])
-    figures = []
-    figures.append(dict(data = graph, layout = layout))
+    figures = (dict(data = graph, layout = layout))
 
     return figures
 
