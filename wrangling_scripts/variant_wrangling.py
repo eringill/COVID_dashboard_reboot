@@ -41,9 +41,9 @@ def return_variant_graph(df, variants):
             )
         )
 
-    layout = dict(title="Variant Proportion of Samples Sequenced in Canada by Date",
+    layout = dict(barmode:'relative', title="Variant Proportion of Samples Sequenced in Canada by Date",
                   xaxis=dict(title='Date'),
-                  yaxis=dict(title='Variant Proportion'), barmode:'relative'
+                  yaxis=dict(title='Variant Proportion')
                   )
 
     figures = []
