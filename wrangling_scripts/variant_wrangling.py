@@ -28,11 +28,11 @@ def wrangle_data(url):
     
     return df_unique_weeks, variants
 
-def return_variant_graph(df, variants):
+def return_variant_graph():
     graph = []
-    for var in variants:
-        x_val = df[df['identifier'] == var].YMD.tolist()
-        y_val = df[df['identifier'] == var].percentage.tolist()
+    for var in var_list:
+        x_val = week_df[week_df['identifier'] == var].YMD.tolist()
+        y_val = week_df[week_df['identifier'] == var].percentage.tolist()
         graph.append(
             go.Bar(
                 x = x_val,
@@ -54,5 +54,3 @@ def return_variant_graph(df, variants):
 csv_url = 'https://health-infobase.canada.ca/src/data/covidLive/covid19-epiSummary-variants-detailed-download.csv'
 
 week_df, var_list = wrangle_data(csv_url)
-
-return_variant_graph(week_df, var_list)
