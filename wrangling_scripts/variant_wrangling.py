@@ -36,15 +36,14 @@ def return_variant_graph(df, variants):
         graph.append(
             go.Bar(
                 x = x_val,
-                y = y_val,
-                name = var,
-                offsetgroup=0
+                y = y_val
+                
             )
         )
 
     layout = dict(title="Variant Proportion of Samples Sequenced in Canada by Date",
                   xaxis=dict(title='Date'),
-                  yaxis=dict(title='Variant Proportion')
+                  yaxis=dict(title='Variant Proportion'), barmode:'relative'
                   )
 
     figures = []
