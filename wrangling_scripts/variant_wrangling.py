@@ -37,7 +37,8 @@ def return_variant_graph(df, variants):
             go.Bar(
                 x = x_val,
                 y = y_val,
-                name = var
+                name = var,
+                offsetgroup=0
             )
         )
 
@@ -45,8 +46,7 @@ def return_variant_graph(df, variants):
                   xaxis=dict(title='Date'),
                   yaxis=dict(title='Variant Proportion')
                   )
-    fig = go.Figure(data = graph, layout = layout)
-    fig.update_layout(barmode='stack')
+
     figures = []
     figures.append(dict(data = graph, layout = layout))
 
