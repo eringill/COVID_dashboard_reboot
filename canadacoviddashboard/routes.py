@@ -121,3 +121,17 @@ def testing_rate():
     return render_template('testing_rate.html',
                            ids=ids,
                            figuresJSON=figuresJSON)
+
+@app.route('/variants')
+def variants():
+    figures = return_variant_fig()
+
+    # plot ids for the html id tag
+    ids = ['figure-{}'.format(i) for i, _ in enumerate(figures)]
+
+    # Convert the plotly figures to JSON for javascript in html template
+    figuresJSON = json.dumps(figures, cls=plotly.utils.PlotlyJSONEncoder)
+
+    return render_template('variants.html',
+                           ids=ids,
+                           figuresJSON=figuresJSON)

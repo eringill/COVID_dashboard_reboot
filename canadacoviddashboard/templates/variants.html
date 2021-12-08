@@ -31,13 +31,13 @@
               <a class="nav-link" href="index">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="total_cases">Total Cases</a>
+              <a class="nav-link active" href="total_cases">Total Cases</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="new_cases">New Cases</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="active_cases">Active Cases by Region</a>
+              <a class="nav-link" href="active_cases">Active Cases by Region</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="recoveries">Recoveries</a>
@@ -52,7 +52,7 @@
               <a class="nav-link" href="testing_rate">Testing Rate</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" href="variants">Variants</a>
+              <a class="nav-link active" aria-current="page" href="variants">Variants<span class="sr-only">(current)</span></a>
             </li>
           </ul>
         </div>
@@ -61,35 +61,19 @@
     <!-- middle section -->
   
     <!--charts-->       
-    
     <div id="charts" class="container mt-3 text-center">
                     
         <!--top two charts-->       
         <div class="row">
-            <div class="col-6">
+            <div class="col-12">
                 <div id="{{ids[0]}}"></div>
             </div>
-            <div class="col-6">
-                <div id="{{ids[1]}}"></div>
-            </div>
         </div>
 
-        <!--bottom two charts-->        
-        <div class="row mb-6">
-            <div class="col-12">
-                <div id="chart3">
-                    <div id="{{ids[2]}}"></div>
-                </div>
-            </div>
-        </div>
         
-        <!--bottom chart-->        
-        <div class="row mb-6">
-            <div class="col-12">
-                  <div id="{{ids[3]}}"></div>
-            </div>
-        </div>
 
+        <div class="col-1 border-left">
+        </div>
     </div>
   </body>
   <footer>
