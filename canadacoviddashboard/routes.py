@@ -54,7 +54,7 @@ def new_cases():
 
 @app.route('/active_cases')
 def active_cases():
-    figures = return_active_cases_fig()
+    figures = active_figs()
 
     # plot ids for the html id tag
     ids = ['figure-{}'.format(i) for i, _ in enumerate(figures)]
