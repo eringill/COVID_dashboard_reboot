@@ -51,6 +51,6 @@ def return_variant_graph():
 
     return figures
 
-csv_url = 'https://health-infobase.canada.ca/src/data/covidLive/covid19-epiSummary-variants-detailed-download.csv'
+csv_url = 'https://health-infobase.canada.ca/src/data/covidLive/covid19-epiSummary-variants.csv'
 
 week_df, var_list = wrangle_data(csv_url)
