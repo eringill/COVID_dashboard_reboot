@@ -67,19 +67,6 @@ def active_cases():
                            ids=ids,
                            figuresJSON=figuresJSON)
 
-@app.route('/recoveries')
-def recoveries():
-    figures = return_recoveries_fig()
-
-    # plot ids for the html id tag
-    ids = ['figure-{}'.format(i) for i, _ in enumerate(figures)]
-
-    # Convert the plotly figures to JSON for javascript in html template
-    figuresJSON = json.dumps(figures, cls=plotly.utils.PlotlyJSONEncoder)
-
-    return render_template('recoveries.html',
-                           ids=ids,
-                           figuresJSON=figuresJSON)
 
 @app.route('/deaths')
 def deaths():
@@ -109,19 +96,6 @@ def rate_of_infection():
                            ids=ids,
                            figuresJSON=figuresJSON)
 
-@app.route('/testing_rate')
-def testing_rate():
-    figures = return_testing_rate_fig()
-
-    # plot ids for the html id tag
-    ids = ['figure-{}'.format(i) for i, _ in enumerate(figures)]
-
-    # Convert the plotly figures to JSON for javascript in html template
-    figuresJSON = json.dumps(figures, cls=plotly.utils.PlotlyJSONEncoder)
-
-    return render_template('testing_rate.html',
-                           ids=ids,
-                           figuresJSON=figuresJSON)
 
 @app.route('/variants')
 def variants():
