@@ -1,6 +1,9 @@
 import pandas as pd
 pd.options.mode.chained_assignment = None
 import plotly.graph_objs as go
+import requests
+import pandas as pd
+import datetime as dt
 
 csv_url = "https://health-infobase.canada.ca/src/data/covidLive/covid19.csv"
 
@@ -90,33 +93,7 @@ def return_total_cases_fig():
 #New Cases Figures
 def return_new_cases_fig():
     data = make_barchart_dataset(make_dataset(unique_provnames(), format_dates(df)))
-    data = data[['prname', 'YMD', 'numtoday', 'percentoday', 'numtotal_last7', 'ratetotal_last7']]
-
-    graph_one = []
-    graph_one.append(
-        go.Bar(
-            x = data.prname.tolist(),
-            y = data.numtoday.tolist(),
-        )
-    )
-
-    layout_one = dict(title = 'New Cases Today By Region',
-                        xaxis = dict(title = 'Region', title_standoff = 25, automargin = True),
-                        yaxis = dict(title = 'New Cases Today'),
-                    )
-
-    graph_two = []
-    graph_two.append(
-        go.Bar(
-            x = data.prname.tolist(),
-            y = data.percentoday.tolist(),
-        )
-    )
-    
-    layout_two = dict(title = 'Percent New Cases Today By Region',
-                        xaxis = dict(title = 'Region', title_standoff = 25, automargin = True),
-                        yaxis = dict(title = 'Percent New Cases Today'),
-                    )
+    data = data[['prname', 'YMD', 'numtotal_last7', 'ratetotal_last7']]
 
     graph_three = []
     graph_three.append(
@@ -145,38 +122,88 @@ def return_new_cases_fig():
                             )
 
     figures = []
-    figures.append(dict(data = graph_one, layout = layout_one))
-    figures.append(dict(data = graph_two, layout = layout_two))
     figures.append(dict(data = graph_three, layout = layout_three))
     figures.append(dict(data = graph_four, layout = layout_four))
 
     return figures
 
 #Active Cases Figures
-def return_active_cases_fig():
-    data_pie = make_barchart_dataset(make_dataset(unique_provnames(), format_dates(df)))
-    data_pie = data_pie[['prname', 'YMD', 'numactive']]
-    data_pie = data_pie[data_pie['prname'] != 'Canada']
 
-    graph_one = []
-    graph_one.append(
-        go.Pie(
-            labels = data_pie.prname.tolist(),
-            values = data_pie.numactive.tolist(),
-        )
-    )
+def access_api(prov_list, url, column):
+    column_names = ['date', column, 'prname']
+    total_data = pd.DataFrame(columns = column_names) 
+    
+    for prov in prov_list:
+        new_url = url + prov
+        r = requests.get(new_url, allow_redirects=True)
 
-    layout_one = dict(title = 'Active Cases Today By Region <br> as a Percentage of All Active Cases in Canada', textposition = 'inside', uniformtext_minsize=12,
-                      uniformtext_mode='hide'
-                    )
+        data = r.json()
 
-    graph_two = []
-    data = make_dataset(unique_provnames(), format_dates(df))
-    data = data[['prname', 'YMD', 'numactive']]
-    for region in unique_provnames():
-        x_val = data[data['prname'] == region].YMD.tolist()
-        y_val = data[data['prname'] == region].numactive.tolist()
-        graph_two.append(
+        hosp = data['data']
+        
+        df = pd.DataFrame(hosp)
+
+        df['prname'] = prov
+
+        df = df[['date', column, 'prname']]
+        
+        total_data = total_data.append(df)
+
+    return total_data
+        
+def access_canada_api(url, column):
+    column_names = ['date', column]
+    total_data = pd.DataFrame(columns = column_names) 
+    r = requests.get(url, allow_redirects=True)
+
+    data = r.json()
+
+    hosp = data['data']
+        
+    df = pd.DataFrame(hosp)
+
+    df['prname'] = 'Canada'
+
+    df = df[['date', column, 'prname']]
+        
+    total_data = total_data.append(df)
+
+    return total_data
+
+
+
+prov_abbs = ['AB', 'BC', 'MB', 'NB', 'NL', 'NS', 'QC', 'ON', 'SK', 'PE', 'NT', 'NU', 'YT']
+
+url="https://api.covid19tracker.ca/reports/province/"
+
+pr_data = access_api(prov_abbs, url, 'total_hospitalizations')
+
+can_url = 'https://api.covid19tracker.ca/reports'
+
+can_data = access_canada_api(can_url, 'total_hospitalizations')
+
+prov_dict = {
+    'AB':'Alberta', 'BC':'British Columbia', 'MB':'Manitoba', 'NB':'New Brunswick', 'NL':'Newfoundland', 'NS':'Nova Scotia', 'QC':'Quebec', 
+    'ON':'Ontario', 'SK':'Saskatchewan', 'PE':'Prince Edward Island', 'NT':'Northwest Territories', 'NU':'Nunavut', 'YT':'Yukon'
+}
+
+pr_data = pr_data.append(can_data)
+pr_data['date'] = pd.to_datetime(pr_data['date'])
+
+pr_data['YMD'] = pr_data['date'].dt.date
+pr_data['prname'] = pr_data['prname'].replace(prov_dict)
+provnames = sorted(pr_data.prname.unique())
+myorder = [2, 0, 1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+provnames = [provnames[i] for i in myorder]
+
+
+#hospitalizations figure
+def return_hosp_fig():
+    graph = []
+    for region in provnames:
+        x_val = pr_data[pr_data['prname'] == region].YMD.tolist()
+        y_val = pr_data[pr_data['prname'] == region].total_hospitalizations.tolist()
+        graph.append(
             go.Scatter(
                 x = x_val,
                 y = y_val,
@@ -185,105 +212,32 @@ def return_active_cases_fig():
             )
         )
 
-    layout_two = dict(title = 'Cases Active Historically By Region',
-                        xaxis = dict(title = 'Date'),
-                        yaxis = dict(title = 'Active Cases'),
-                    )
+    layout = dict(title="Total Hospitalizations Historically By Region",
+                  xaxis=dict(title='Date'),
+                  yaxis=dict(title='Number of Individuals Hospitalized'),
+                  updatemenus=[dict(buttons=list([
+                      dict(label="Linear",
+                           method="relayout",
+                           args=[{"yaxis.type": "linear"}]),
 
-    data = make_barchart_dataset(make_dataset(unique_provnames(), format_dates(df)))
-    data = data[['prname', 'YMD', 'rateactive']]
+                      dict(label="Log",
+                           method="relayout",
+                           args=[{"yaxis.type": "log"}]),
+                  ]),
+                  )])
+    figures = (dict(data = graph, layout = layout))
 
-    graph_three = []
-    graph_three.append(
-        go.Bar(
-            x=data.prname.tolist(),
-            y=data.rateactive.tolist(),
-        )
-    )
-
-    layout_three = dict(title='Active Case Rate (Per 100,000 Population) <br> Today By Region',
-                      xaxis=dict(title='Region', title_standoff=25, automargin=True),
-                      yaxis=dict(title='Active Case Rate'),
-                      )
-
-    figures = []
-    figures.append(dict(data = graph_one, layout = layout_one))
-    figures.append(dict(data=graph_three, layout=layout_three))
-    figures.append(dict(data = graph_two, layout = layout_two))
-    
     return figures
 
-#Recoveries Figures
-def return_recoveries_fig():
-    data_bar = make_barchart_dataset(make_dataset(unique_provnames(), format_dates(df)))
-    data_bar = data_bar[['prname', 'YMD', 'numrecoveredtoday']]
+def active_figs():
+    return return_hosp_fig()
 
-    graph_one = []
-    graph_one.append(
-        go.Bar(
-            x = data_bar.prname.tolist(),
-            y = data_bar.numrecoveredtoday.tolist(),
-        )
-    )
-
-    layout_one = dict(title = 'Number of Recoveries Today By Region',
-                        xaxis = dict(title = 'Region', title_standoff = 25, automargin = True),
-                        yaxis = dict(title = 'Number of Recoveries Today'),
-                    )
-    
-    graph_two = []
-    data = make_dataset(unique_provnames(), format_dates(df))
-    data = data[['prname', 'YMD', 'numrecover']]
-    for region in unique_provnames():
-        x_val = data[data['prname'] == region].YMD.tolist()
-        y_val = data[data['prname'] == region].numrecover.tolist()
-        graph_two.append(
-            go.Scatter(
-                x = x_val,
-                y = y_val,
-                mode = 'lines',
-                name = region
-            )
-        )
-
-    layout_two = dict(title = "Cumulative Recoveries by Region",
-                    xaxis = dict(title = 'Date'),
-                    yaxis = dict(title = 'Total Number of Recoveries'),
-                      updatemenus=[dict(buttons=list([
-                          dict(label="Linear",
-                               method="relayout",
-                               args=[{"yaxis.type": "linear"}]),
-
-                          dict(label="Log",
-                               method="relayout",
-                               args=[{"yaxis.type": "log"}]),
-                      ]),
-                      )])
-    
-    figures = []
-    figures.append(dict(data = graph_one, layout = layout_one))
-    figures.append(dict(data = graph_two, layout = layout_two))
-    
-    return figures
 
 #deaths figures
 def return_deaths_fig():
     data_bar = make_barchart_dataset(make_dataset(unique_provnames(), format_dates(df)))
     data_bar = data_bar[['prname', 'YMD', 'numdeathstoday', 'numdeaths_last7', 'ratedeaths_last7', 'avgdeaths_last7']]
 
-    graph_one = []
-    graph_one.append(
-        go.Bar(
-            x = data_bar.prname.tolist(),
-            y = data_bar.numdeathstoday.tolist()
-        )
-    )
-
-    layout_one = dict(title = 'Number of Deaths Today By Region',
-                        xaxis = dict(title = 'Region', title_standoff = 25, automargin = True),
-                        yaxis = dict(title = 'Number of Deaths Today')
-                    )
-    
     graph_two = []
     data = make_dataset(unique_provnames(), format_dates(df))
     data = data[['prname', 'YMD', 'numdeaths']]
@@ -332,7 +286,6 @@ def return_deaths_fig():
 
 
     figures = []
-    figures.append(dict(data = graph_one, layout = layout_one))
     figures.append(dict(data = graph_two, layout = layout_two))
     figures.append(dict(data = graph_three, layout = layout_three))
     figures.append(dict(data = graph_four, layout = layout_four))
@@ -343,10 +296,10 @@ def return_deaths_fig():
 def return_rate_of_infection_fig():
     graph = []
     data = make_dataset(unique_provnames(), format_dates(df))
-    data = data[['prname', 'YMD', 'ratetotal']]
+    data = data[['prname', 'YMD', 'ratecasestotal']]
     for region in unique_provnames():
         x_val = data[data['prname'] == region].YMD.tolist()
-        y_val = data[data['prname'] == region].ratetotal.tolist()
+        y_val = data[data['prname'] == region].ratecasestotal.tolist()
         graph.append(
             go.Scatter(
                 x = x_val,
@@ -359,42 +312,6 @@ def return_rate_of_infection_fig():
     layout = dict(title = "Rate of Infection (per 100,000 population) By Region",
                     xaxis = dict(title = 'Date'),
                     yaxis = dict(title = 'Rate of Infection (per 100,000 population)'),
-                    updatemenus=[dict(buttons=list([
-                      dict(label="Linear",
-                           method="relayout",
-                           args=[{"yaxis.type": "linear"}]),
-
-                      dict(label="Log",
-                           method="relayout",
-                           args=[{"yaxis.type": "log"}]),
-                  ]),
-                  )])
-    
-    figures = []
-    figures.append(dict(data = graph, layout = layout))
-
-    return figures
-
-#Testing Rate Figures
-def return_testing_rate_fig():
-    graph = []
-    data = make_dataset(unique_provnames(), format_dates(df))
-    data = data[['prname', 'YMD', 'ratetests']]
-    for region in unique_provnames():
-        x_val = data[data['prname'] == region].YMD.tolist()
-        y_val = data[data['prname'] == region].ratetests.tolist()
-        graph.append(
-            go.Scatter(
-                x = x_val,
-                y = y_val,
-                mode = 'lines',
-                name = region
-            )
-        )
-
-    layout = dict(title = "Testing Rate (per 1 million population) By Region",
-                    xaxis = dict(title = 'Date'),
-                    yaxis = dict(title = 'Testing Rate (per 1 million population)'),
                     updatemenus=[dict(buttons=list([
                       dict(label="Linear",
                            method="relayout",

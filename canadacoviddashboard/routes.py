@@ -5,6 +5,7 @@ from flask import render_template
 import pandas as pd
 from wrangling_scripts.wrangling import *
 from wrangling_scripts.vaccine_wrangling import return_vaccine_fig
+from wrangling_scripts.variant_wrangling import return_variant_graph
 
 @app.route('/')
 @app.route('/index')
@@ -54,7 +55,7 @@ def new_cases():
 
 @app.route('/active_cases')
 def active_cases():
-    figures = return_active_cases_fig()
+    figures = active_figs()
 
     # plot ids for the html id tag
     ids = ['figure-{}'.format(i) for i, _ in enumerate(figures)]
@@ -66,19 +67,6 @@ def active_cases():
                            ids=ids,
                            figuresJSON=figuresJSON)
 
-@app.route('/recoveries')
-def recoveries():
-    figures = return_recoveries_fig()
-
-    # plot ids for the html id tag
-    ids = ['figure-{}'.format(i) for i, _ in enumerate(figures)]
-
-    # Convert the plotly figures to JSON for javascript in html template
-    figuresJSON = json.dumps(figures, cls=plotly.utils.PlotlyJSONEncoder)
-
-    return render_template('recoveries.html',
-                           ids=ids,
-                           figuresJSON=figuresJSON)
 
 @app.route('/deaths')
 def deaths():
@@ -108,9 +96,10 @@ def rate_of_infection():
                            ids=ids,
                            figuresJSON=figuresJSON)
 
-@app.route('/testing_rate')
-def testing_rate():
-    figures = return_testing_rate_fig()
+
+@app.route('/variants')
+def variants():
+    figures = return_variant_graph()
 
     # plot ids for the html id tag
     ids = ['figure-{}'.format(i) for i, _ in enumerate(figures)]
@@ -118,6 +107,6 @@ def testing_rate():
     # Convert the plotly figures to JSON for javascript in html template
     figuresJSON = json.dumps(figures, cls=plotly.utils.PlotlyJSONEncoder)
 
-    return render_template('testing_rate.html',
+    return render_template('variants.html',
                            ids=ids,
                            figuresJSON=figuresJSON)
