@@ -14,8 +14,6 @@ def format_dates(df):
     df['dates'] = pd.to_datetime(df['date'], dayfirst = True)
     df['YMD'] = df['dates'].dt.date
     df = df.drop(['date', 'dates', 'prnameFR', 'pruid'], axis = 1)
-    #if provinces don't report active cases, assume they have 0, so the data will plot
-    df['numactive'].fillna(0.0, inplace = True)
     return df
 
 
@@ -59,10 +57,10 @@ def make_barchart_dataset(df):
 def return_total_cases_fig():
     graph = []
     data = make_dataset(unique_provnames(), format_dates(df))
-    data = data[['prname', 'YMD', 'numtotal']]
+    data = data[['prname', 'YMD', 'totalcases']]
     for region in unique_provnames():
         x_val = data[data['prname'] == region].YMD.tolist()
-        y_val = data[data['prname'] == region].numtotal.tolist()
+        y_val = data[data['prname'] == region].totalcases.tolist()
         graph.append(
             go.Scatter(
                 x = x_val,
@@ -236,7 +234,7 @@ def active_figs():
 #deaths figures
 def return_deaths_fig():
     data_bar = make_barchart_dataset(make_dataset(unique_provnames(), format_dates(df)))
-    data_bar = data_bar[['prname', 'YMD', 'numdeathstoday', 'numdeaths_last7', 'ratedeaths_last7', 'avgdeaths_last7']]
+    data_bar = data_bar[['prname', 'YMD', 'numdeaths_last7', 'ratedeaths_last7', 'avgdeaths_last7']]
 
     graph_two = []
     data = make_dataset(unique_provnames(), format_dates(df))
