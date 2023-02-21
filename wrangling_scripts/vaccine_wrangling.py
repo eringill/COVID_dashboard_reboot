@@ -1,6 +1,8 @@
 import pandas as pd
 #pd.options.mode.chained_assignment = None
 import plotly.graph_objs as go
+import warnings
+warnings.filterwarnings('ignore')
 
 csv_url = "https://health-infobase.canada.ca/src/data/covidLive/vaccination-coverage-map.csv"
 
@@ -42,6 +44,10 @@ def make_vaccine_dataset():
     data = make_dataset(unique_provnames(), format_dates(df))
     plot_data2 = data[data['prename'] == 'Canada']
     plot_data2 = plot_data2[['YMD', 'proptotal_atleast1dose', 'proptotal_fully']]
+    plot_data2['proptotal_atleast1dose'] = (plot_data2['proptotal_atleast1dose'].astype(str)).str.replace('<','')
+    plot_data2['proptotal_fully'] = (plot_data2['proptotal_fully'].astype(str)).str.replace('<','')
+    plot_data2['proptotal_atleast1dose'] = pd.to_numeric(plot_data2['proptotal_atleast1dose']) 
+    plot_data2['proptotal_fully'] = pd.to_numeric(plot_data2['proptotal_fully']) 
     plot_data2 = pd.melt(plot_data2, id_vars= ['YMD'], value_vars = ['proptotal_atleast1dose', 'proptotal_fully'])
     plot_data2["variable"].replace({"proptotal_atleast1dose": "at least one dose", "proptotal_fully": "fully vaccinated"}, inplace=True)
     plot_data2['YMD']= pd.to_datetime(plot_data2['YMD'])

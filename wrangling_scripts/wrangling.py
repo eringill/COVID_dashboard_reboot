@@ -4,6 +4,8 @@ import plotly.graph_objs as go
 import requests
 import pandas as pd
 import datetime as dt
+import warnings
+warnings.filterwarnings('ignore')
 
 csv_url = "https://health-infobase.canada.ca/src/data/covidLive/covid19.csv"
 
@@ -21,9 +23,8 @@ def format_dates(df):
 def unique_provnames():
     provnames = df.prname.unique()
     provnames = list(provnames)
-    provnames.pop()
     provnames.sort()
-    myorder = [2, 0, 1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+    myorder = [2, 0, 1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14]
     provnames = [provnames[i] for i in myorder]
     return provnames
 
@@ -91,7 +92,7 @@ def return_total_cases_fig():
 #New Cases Figures
 def return_new_cases_fig():
     data = make_barchart_dataset(make_dataset(unique_provnames(), format_dates(df)))
-    data = data[['prname', 'YMD', 'numtotal_last7', 'ratetotal_last7']]
+    data = data[['prname', 'YMD', 'numtotal_last7', 'ratecases_last7']]
 
     graph_three = []
     graph_three.append(
@@ -110,7 +111,7 @@ def return_new_cases_fig():
     graph_four.append(
         go.Bar(
             x = data.prname.tolist(),
-            y = data.ratetotal_last7.tolist(),
+            y = data.ratecases_last7.tolist(),
         )
     )
 
@@ -294,10 +295,10 @@ def return_deaths_fig():
 def return_rate_of_infection_fig():
     graph = []
     data = make_dataset(unique_provnames(), format_dates(df))
-    data = data[['prname', 'YMD', 'ratecasestotal']]
+    data = data[['prname', 'YMD', 'ratecases_total']]
     for region in unique_provnames():
         x_val = data[data['prname'] == region].YMD.tolist()
-        y_val = data[data['prname'] == region].ratecasestotal.tolist()
+        y_val = data[data['prname'] == region].ratecases_total.tolist()
         graph.append(
             go.Scatter(
                 x = x_val,
