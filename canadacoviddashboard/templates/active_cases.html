@@ -49,16 +49,10 @@
               <a class="nav-link active" aria-current="page" href="active_cases">Active Cases by Region</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="recoveries">Recoveries</a>
-            </li>
-            <li class="nav-item">
               <a class="nav-link" href="deaths">Deaths</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="rate_of_infection">Rate of Infection</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="testing_rate">Testing Rate</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="variants">Variants</a>
@@ -69,50 +63,34 @@
     
     <!-- middle section -->
   
-    <!--charts-->       
-    
-    <div id="charts" class="container mt-3 text-center">
+<!--charts-->       
+<div id="charts" class="container mt-3 text-center">
                     
-        <!--top two charts-->       
-        <div class="row">
-            <div class="col-6">
-                <div id="{{ids[0]}}"></div>
-            </div>
-            <div class="col-6">
-                <div id="{{ids[1]}}"></div>
-            </div>
-        </div>
+  <!--top two charts-->       
+  <div class="row">
+      <div class="col-12">
+          <div id="{{ids[0]}}"></div>
+      </div>
+  </div>
 
-        <!--bottom two charts-->        
-        <div class="row mb-6">
-            <div class="col-12">
-                <div id="chart3">
-                    <div id="{{ids[2]}}"></div>
-                </div>
-            </div>
-        </div>
-        
-        <!--bottom chart-->        
-        <div class="row mb-6">
-            <div class="col-12">
-                  <div id="{{ids[3]}}"></div>
-            </div>
-        </div>
+  
 
-    </div>
-  </body>
-  <footer>
+  <div class="col-1 border-left">
+  </div>
+</div>
+</body>
+<footer>
 
-    <script type="text/javascript">
-        // plots the figure with id
-        // id much match the div id above in the html
-        var figures = {{figuresJSON | safe}};
-        var ids = {{ids | safe}};
-        for(var i in figures) {
-            Plotly.plot(ids[i],
-                figures[i].data,
-                figures[i].layout || {});
-        }
+<script type="text/javascript">
+  // plots the figure with id
+  // id much match the div id above in the html
+  var figures = {{figuresJSON | safe}};
+  var ids = {{ids | safe}};
+  for(var i in figures) {
+      Plotly.plot(ids[i],
+          figures[i].data,
+          figures[i].layout || {});
+  }
     </script>
 
   </footer>

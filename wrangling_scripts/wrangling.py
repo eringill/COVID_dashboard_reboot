@@ -171,33 +171,32 @@ def access_canada_api(url, column):
 
 
 
-prov_abbs = ['AB', 'BC', 'MB', 'NB', 'NL', 'NS', 'QC', 'ON', 'SK', 'PE', 'NT', 'NU', 'YT']
-
-url="https://api.covid19tracker.ca/reports/province/"
-
-pr_data = access_api(prov_abbs, url, 'total_hospitalizations')
-
-can_url = 'https://api.covid19tracker.ca/reports'
-
-can_data = access_canada_api(can_url, 'total_hospitalizations')
-
-prov_dict = {
-    'AB':'Alberta', 'BC':'British Columbia', 'MB':'Manitoba', 'NB':'New Brunswick', 'NL':'Newfoundland', 'NS':'Nova Scotia', 'QC':'Quebec', 
-    'ON':'Ontario', 'SK':'Saskatchewan', 'PE':'Prince Edward Island', 'NT':'Northwest Territories', 'NU':'Nunavut', 'YT':'Yukon'
-}
-
-pr_data = pr_data.append(can_data)
-pr_data['date'] = pd.to_datetime(pr_data['date'])
-
-pr_data['YMD'] = pr_data['date'].dt.date
-pr_data['prname'] = pr_data['prname'].replace(prov_dict)
-provnames = sorted(pr_data.prname.unique())
-myorder = [2, 0, 1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
-provnames = [provnames[i] for i in myorder]
-
 
 #hospitalizations figure
 def return_hosp_fig():
+    prov_abbs = ['AB', 'BC', 'MB', 'NB', 'NL', 'NS', 'QC', 'ON', 'SK', 'PE', 'NT', 'NU', 'YT']
+
+    url="https://api.covid19tracker.ca/reports/province/"
+
+    pr_data = access_api(prov_abbs, url, 'total_hospitalizations')
+
+    can_url = 'https://api.covid19tracker.ca/reports'
+
+    can_data = access_canada_api(can_url, 'total_hospitalizations')
+
+    prov_dict = {
+        'AB':'Alberta', 'BC':'British Columbia', 'MB':'Manitoba', 'NB':'New Brunswick', 'NL':'Newfoundland', 'NS':'Nova Scotia', 'QC':'Quebec', 
+        'ON':'Ontario', 'SK':'Saskatchewan', 'PE':'Prince Edward Island', 'NT':'Northwest Territories', 'NU':'Nunavut', 'YT':'Yukon'
+    }
+
+    pr_data = pr_data.append(can_data)
+    pr_data['date'] = pd.to_datetime(pr_data['date'])
+
+    pr_data['YMD'] = pr_data['date'].dt.date
+    pr_data['prname'] = pr_data['prname'].replace(prov_dict)
+    provnames = sorted(pr_data.prname.unique())
+    myorder = [2, 0, 1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+    provnames = [provnames[i] for i in myorder]
     graph = []
     for region in provnames:
         x_val = pr_data[pr_data['prname'] == region].YMD.tolist()
@@ -224,7 +223,7 @@ def return_hosp_fig():
                            args=[{"yaxis.type": "log"}]),
                   ]),
                   )])
-    figures = (dict(data = graph, layout = layout))
+    figures = [(dict(data = graph, layout = layout))]
 
     return figures
 

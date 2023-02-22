@@ -10,7 +10,7 @@ df = pd.read_csv(csv_url)
 
 def format_dates(df):
     df['YMD'] = pd.to_datetime(df['week_end'])
-    df = df.drop(['week_end', 'prfname', 'pruid', 'numweekdelta_atleast1dose', 'numweekdelta_fully', 'propweekdelta_atleast1dose', 'propweekdelta_fully'], axis = 1)
+    df = df[['YMD', 'prename', 'proptotal_atleast1dose', 'proptotal_fully']]
     return df
 
 
