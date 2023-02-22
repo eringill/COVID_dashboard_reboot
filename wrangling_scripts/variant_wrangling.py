@@ -1,6 +1,7 @@
 import pandas as pd
 pd.options.mode.chained_assignment = None
 import plotly.graph_objs as go
+import plotly.express as px
 import pandas as pd
 import datetime as dt
 
@@ -30,14 +31,15 @@ def wrangle_data(url):
 
 def return_variant_graph():
     graph = []
-    for var in var_list:
+    for i, var in enumerate(var_list):
         x_val = week_df[week_df['identifier'] == var].YMD.tolist()
         y_val = week_df[week_df['identifier'] == var].percentage.tolist()
         graph.append(
             go.Bar(
                 x = x_val,
-                y = y_val, 
-                name = var
+                y = y_val,
+                name = var,
+                marker_color = px.colors.qualitative.Dark24[i]
             )
         )
 
